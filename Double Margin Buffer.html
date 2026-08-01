@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Margin Buffer - ATR TEFA</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-terracotta: #FF6B35;
+            --accent-gold: #FBBF24;
+            --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            --accent-purple: #8B5CF6;
+            
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-card: rgba(255, 255, 255, 0.07);
+            --glass-card-hover: rgba(255, 255, 255, 0.14);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-border-hover: rgba(255, 255, 255, 0.28);
+            
+            --text-main: #FFFFFF;
+            --text-sub: rgba(255, 255, 255, 0.65);
+            --text-muted: rgba(255, 255, 255, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: #0B0F19;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Animated Background Glows */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.35;
+            animation: float 18s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: #8B0000;
+        }
+
+        .orb-2 {
+            top: 40%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: #C85A27;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            bottom: -10%;
+            left: 20%;
+            width: 550px;
+            height: 550px;
+            background: #1E1B4B;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, 40px) scale(1.1); }
+            100% { transform: translate(-40px, 80px) scale(0.95); }
+        }
+
+        /* Glassmorphism Header */
+        header {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: var(--primary-terracotta);
+            transform: translateX(-3px);
+        }
+
+        .logo-container {
+            position: relative;
+            padding: 6px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+        }
+
+        .logo-img {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .header-title h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 0.78rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .user-badge {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 1200px;
+            margin: 36px auto;
+            padding: 0 24px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Cards Base */
+        .glass-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        /* Section Headings */
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: linear-gradient(180deg, var(--primary-terracotta), var(--accent-gold));
+            border-radius: 10px;
+        }
+
+        /* Layout Grid */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 868px) {
+            .grid-2col { grid-template-columns: 1fr; }
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-sub);
+            letter-spacing: 0.3px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(0, 0, 0, 0.45);
+            border-color: var(--primary-terracotta);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
+        }
+
+        select.form-control option {
+            background: #111827;
+            color: #FFFFFF;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #FF6B35 0%, #D94E1F 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 107, 53, 0.45);
+            filter: brightness(1.1);
+        }
+
+        /* Double Buffer Visual Cards */
+        .summary-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .buffer-bar-container {
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            height: 24px;
+            display: flex;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .bar-hpp { background: var(--accent-blue); width: 65%; height: 100%; transition: width 0.3s ease; }
+        .bar-buf1 { background: var(--accent-gold); width: 15%; height: 100%; transition: width 0.3s ease; }
+        .bar-buf2 { background: var(--accent-green); width: 20%; height: 100%; transition: width 0.3s ease; }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-sub);
+        }
+
+        .dot-hpp { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-blue); }
+        .dot-buf1 { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-gold); }
+        .dot-buf2 { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-green); }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            margin-bottom: 12px;
+            color: var(--text-sub);
+        }
+
+        .stat-row span:last-child {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .total-box {
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            padding-top: 16px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        /* Table Styling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        .history-table th {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-sub);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .history-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        .history-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .badge-safe {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-medium {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 50px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(16, 185, 129, 0.2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Gradient Orbs -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- GLASS HEADER -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="btn-back" title="Kembali ke Menu Utama">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </a>
+            <div class="logo-container">
+                <img src="https://github.com/dahsh-ja/agribisnis-ternak-ruminansia/raw/main/ATEER-removebg-preview.png" alt="Logo ATR" class="logo-img">
+            </div>
+            <div class="header-title">
+                <h1>DOUBLE MARGIN BUFFER CALCULATOR</h1>
+                <p>Financial & Risk Protection • SMKN 1 Wonosari</p>
+            </div>
+        </div>
+        <div class="user-badge">
+            <div class="status-dot"></div>
+            <span><b>Finance Active</b></span>
+        </div>
+    </header>
+
+    <div class="app-container">
+
+        <!-- SECTION 1: KALKULATOR DOUBLE MARGIN BUFFER -->
+        <div class="glass-card">
+            <div class="section-title">
+                SIMULASI STABILITAS HARGA & PROTEKSI BUFFER
+            </div>
+
+            <div class="grid-2col">
+                <!-- Inputs Form -->
+                <div>
+                    <div class="form-group">
+                        <label>Nama Komoditas / Produk</label>
+                        <input type="text" class="form-control" id="prodName" value="Telur Ayam Ras Fresh Grade A">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>HPP Pokok Dasar (Rp/Kg)</label>
+                            <input type="number" class="form-control" id="hppBase" value="13500" step="100" oninput="recalculateBuffer()">
+                        </div>
+                        <div class="form-group">
+                            <label>Estimasi Volume Panen (Kg)</label>
+                            <input type="number" class="form-control" id="volBatch" value="100" step="1" oninput="recalculateBuffer()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Buffer Lapis 1: Operational & Feed (%)</label>
+                            <input type="number" class="form-control" id="buf1Pct" value="15" min="0" max="50" oninput="recalculateBuffer()">
+                        </div>
+                        <div class="form-group">
+                            <label>Buffer Lapis 2: Market Risk & TEFA (%)</label>
+                            <input type="number" class="form-control" id="buf2Pct" value="20" min="0" max="50" oninput="recalculateBuffer()">
+                        </div>
+                    </div>
+
+                    <button class="btn-action" onclick="simpanSkemaBuffer()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        <span>Simpan Skema Harga & Buffer</span>
+                    </button>
+                </div>
+
+                <!-- Display Visual Breakdown -->
+                <div class="summary-card">
+                    <div>
+                        <h4 style="font-size:0.9rem; color:var(--text-main); font-weight:700;">Struktur Harga & Alokasi Margin</h4>
+                        
+                        <!-- Visual Bar -->
+                        <div class="buffer-bar-container">
+                            <div class="bar-hpp" id="barHpp" title="HPP Pokok"></div>
+                            <div class="bar-buf1" id="barBuf1" title="Buffer Operasional"></div>
+                            <div class="bar-buf2" id="barBuf2" title="Buffer Pasar & Alat"></div>
+                        </div>
+
+                        <div class="legend-grid">
+                            <div class="legend-item"><div class="dot-hpp"></div><span>HPP Pokok</span></div>
+                            <div class="legend-item"><div class="dot-buf1"></div><span>Buffer Ops/Pakan</span></div>
+                            <div class="legend-item"><div class="dot-buf2"></div><span>Buffer Resiko/TEFA</span></div>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>HPP Dasar / Kg</span>
+                            <span id="dispHpp">Rp 13.500</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Cadangan Fluktuasi Pakan (Lapis 1)</span>
+                            <span id="dispBuf1" style="color:var(--accent-gold);">+ Rp 2.025 / kg</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Cadangan Resiko Pasar & TEFA (Lapis 2)</span>
+                            <span id="dispBuf2" style="color:var(--accent-green);">+ Rp 2.700 / kg</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total Ketahanan Dampak Risiko</span>
+                            <span id="dispTotalBuffer" style="color:#60A5FA; font-weight:700;">Rp 472.500 / Batch</span>
+                        </div>
+                    </div>
+
+                    <div class="total-box">
+                        <div>
+                            <div style="font-size:0.75rem; color:var(--text-sub); font-weight:700; text-transform:uppercase;">Rekomendasi Harga Jual</div>
+                            <div style="font-size:0.75rem; color:var(--accent-green);">Proteksi Ganda Aman</div>
+                        </div>
+                        <div class="total-price" id="dispFinalPrice">Rp 18.225</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: TABEL DOKUMENTASI SKEMA DOUBLE MARGIN BUFFER -->
+        <div class="glass-card">
+            <div class="section-title">
+                DAFTAR SKEMA MARGIN & BUFFER AKTIF TEFA
+            </div>
+
+            <div class="table-responsive">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Komoditas</th>
+                            <th>HPP Pokok</th>
+                            <th>Buffer Lapis 1 (Pakan/Ops)</th>
+                            <th>Buffer Lapis 2 (Pasar/TEFA)</th>
+                            <th>Rekomendasi Harga</th>
+                            <th>Status Ketahanan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bufferTableBody">
+                        <tr>
+                            <td>
+                                <b>Telur Ayam Ras Fresh Grade A</b><br>
+                                <span style="font-size:0.75rem; color:var(--text-sub);">Batch 100 Kg</span>
+                            </td>
+                            <td>Rp 13.500 /kg</td>
+                            <td><span style="color:var(--accent-gold);">15% (Rp 2.025)</span></td>
+                            <td><span style="color:var(--accent-green);">20% (Rp 2.700)</span></td>
+                            <td><b style="color:var(--text-main); font-size:1rem;">Rp 18.225 /kg</b></td>
+                            <td><span class="badge-pill badge-safe">Sangat Kuat (Dual-Shield)</span></td>
+                            <td>
+                                <button onclick="pakaiSkema('Telur Grade A', 18225)" style="background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); color:white; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Gunakan Harga</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Ayam Afkir Karkas Sehat</b><br>
+                                <span style="font-size:0.75rem; color:var(--text-sub);">Batch 50 Ekor</span>
+                            </td>
+                            <td>Rp 35.000 /ekor</td>
+                            <td><span style="color:var(--accent-gold);">10% (Rp 3.500)</span></td>
+                            <td><span style="color:var(--accent-green);">15% (Rp 5.250)</span></td>
+                            <td><b style="color:var(--text-main); font-size:1rem;">Rp 43.750 /ekor</b></td>
+                            <td><span class="badge-pill badge-safe">Aman</span></td>
+                            <td>
+                                <button onclick="pakaiSkema('Ayam Afkir', 43750)" style="background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); color:white; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Gunakan Harga</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 Agribisnis Ternak Ruminansia • SMKN 1 Wonosari</p>
+        </footer>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span id="toastText">Skema Double Margin Buffer Berhasil Diterapkan!</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function recalculateBuffer() {
+            const hpp = parseFloat(document.getElementById('hppBase').value) || 0;
+            const vol = parseFloat(document.getElementById('volBatch').value) || 0;
+            const b1Pct = parseFloat(document.getElementById('buf1Pct').value) || 0;
+            const b2Pct = parseFloat(document.getElementById('buf2Pct').value) || 0;
+
+            const buf1Val = hpp * (b1Pct / 100);
+            const buf2Val = hpp * (b2Pct / 100);
+            const finalPrice = hpp + buf1Val + buf2Val;
+            const totalBufferBatch = (buf1Val + buf2Val) * vol;
+
+            // Visual Bar Calculations
+            const totalPct = 100 + b1Pct + b2Pct;
+            const wHpp = (100 / totalPct) * 100;
+            const wBuf1 = (b1Pct / totalPct) * 100;
+            const wBuf2 = (b2Pct / totalPct) * 100;
+
+            document.getElementById('barHpp').style.width = wHpp + '%';
+            document.getElementById('barBuf1').style.width = wBuf1 + '%';
+            document.getElementById('barBuf2').style.width = wBuf2 + '%';
+
+            // Text Updates
+            document.getElementById('dispHpp').innerText = 'Rp ' + hpp.toLocaleString('id-ID');
+            document.getElementById('dispBuf1').innerText = '+ Rp ' + buf1Val.toLocaleString('id-ID') + ' / kg';
+            document.getElementById('dispBuf2').innerText = '+ Rp ' + buf2Val.toLocaleString('id-ID') + ' / kg';
+            document.getElementById('dispTotalBuffer').innerText = 'Rp ' + totalBufferBatch.toLocaleString('id-ID') + ' / Batch';
+            document.getElementById('dispFinalPrice').innerText = 'Rp ' + Math.round(finalPrice).toLocaleString('id-ID');
+        }
+
+        function simpanSkemaBuffer() {
+            const prod = document.getElementById('prodName').value.trim() || "Produk TEFA";
+            const hpp = parseFloat(document.getElementById('hppBase').value) || 0;
+            const vol = parseFloat(document.getElementById('volBatch').value) || 0;
+            const b1Pct = parseFloat(document.getElementById('buf1Pct').value) || 0;
+            const b2Pct = parseFloat(document.getElementById('buf2Pct').value) || 0;
+
+            const buf1Val = hpp * (b1Pct / 100);
+            const buf2Val = hpp * (b2Pct / 100);
+            const finalPrice = hpp + buf1Val + buf2Val;
+
+            const tbody = document.getElementById('bufferTableBody');
+            const newRow = document.createElement('tr');
+
+            newRow.innerHTML = `
+                <td>
+                    <b>${prod}</b><br>
+                    <span style="font-size:0.75rem; color:var(--text-sub);">Batch ${vol} Unit</span>
+                </td>
+                <td>Rp ${hpp.toLocaleString('id-ID')}</td>
+                <td><span style="color:var(--accent-gold);">${b1Pct}% (Rp ${buf1Val.toLocaleString('id-ID')})</span></td>
+                <td><span style="color:var(--accent-green);">${b2Pct}% (Rp ${buf2Val.toLocaleString('id-ID')})</span></td>
+                <td><b style="color:var(--text-main); font-size:1rem;">Rp ${Math.round(finalPrice).toLocaleString('id-ID')}</b></td>
+                <td><span class="badge-pill badge-safe">Sangat Kuat</span></td>
+                <td>
+                    <button onclick="pakaiSkema('${prod}', ${finalPrice})" style="background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); color:white; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Gunakan Harga</button>
+                </td>
+            `;
+
+            tbody.insertBefore(newRow, tbody.firstChild);
+            showToast('Skema Double Buffer untuk ' + prod + ' Disimpan!');
+        }
+
+        function pakaiSkema(nama, harga) {
+            showToast('Harga ' + nama + ' (Rp ' + Math.round(harga).toLocaleString('id-ID') + ') Diterapkan ke Sistem POS Sales!');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toastText');
+            toastText.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize First Calculation
+        recalculateBuffer();
+    </script>
+</body>
+</html>

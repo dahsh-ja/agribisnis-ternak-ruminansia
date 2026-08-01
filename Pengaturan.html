@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Harga & Berita Pasar - ATR TEFA Ayam Petelur</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-terracotta: #FF6B35;
+            --accent-gold: #FBBF24;
+            --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            --accent-purple: #8B5CF6;
+            
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-card: rgba(255, 255, 255, 0.07);
+            --glass-card-hover: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            
+            --text-main: #FFFFFF;
+            --text-sub: rgba(255, 255, 255, 0.65);
+            --text-muted: rgba(255, 255, 255, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: #0B0F19;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Animated Background Glows */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            animation: float 18s ease-in-out infinite alternate;
+        }
+
+        .orb-1 { top: -10%; left: 10%; width: 500px; height: 500px; background: #C85A27; }
+        .orb-2 { top: 40%; right: -5%; width: 550px; height: 550px; background: #1E1B4B; animation-delay: -5s; }
+        .orb-3 { bottom: -10%; left: 25%; width: 500px; height: 500px; background: #065F46; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.08); }
+            100% { transform: translate(-30px, 60px) scale(0.95); }
+        }
+
+        /* Glassmorphism Header */
+        header {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: var(--primary-terracotta);
+            transform: translateX(-3px);
+        }
+
+        .logo-container {
+            padding: 6px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+        }
+
+        .logo-img {
+            height: 42px;
+            width: auto;
+            display: block;
+        }
+
+        .header-title h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 0.78rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 0 24px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Cards Base */
+        .glass-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: linear-gradient(180deg, var(--primary-terracotta), var(--accent-gold));
+            border-radius: 10px;
+        }
+
+        /* Price Management Table */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .price-table th {
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-sub);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--glass-border);
+            text-align: left;
+        }
+
+        .price-table td {
+            padding: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .price-input {
+            width: 110px;
+            padding: 6px 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .price-input:focus {
+            border-color: var(--accent-gold);
+            outline: none;
+        }
+
+        /* News Section Components */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .news-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+            .news-grid { grid-template-columns: 1fr; }
+        }
+
+        .news-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .news-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-kementan { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-bps { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.4); }
+        .badge-antara { background: rgba(251, 191, 36, 0.2); color: var(--accent-gold); border: 1px solid rgba(251, 191, 36, 0.4); }
+
+        .news-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .news-snippet {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
+            margin-top: auto;
+        }
+
+        .news-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .news-link:hover {
+            color: var(--primary-terracotta);
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 50px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(16, 185, 129, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: white;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="btn-back" title="Kembali">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </a>
+            <div class="logo-container">
+                <img src="https://github.com/dahsh-ja/agribisnis-ternak-ruminansia/raw/main/ATEER-removebg-preview.png" alt="Logo ATR" class="logo-img">
+            </div>
+            <div class="header-title">
+                <h1>PENGATURAN HARGA & INFORMASI PASAR</h1>
+                <p>Komoditas Ayam Petelur & Feeds Berita • SMKN 1 Wonosari</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+
+        <!-- SECTION 1: EDIT DAN ATUR HARGA KOMODITAS AYAM PETELUR -->
+        <div class="glass-card">
+            <div class="section-title">
+                PENGATURAN HARGA KOMODITAS & MARGIN AKTIF
+            </div>
+
+            <div class="table-responsive">
+                <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>Komoditas / Produk TEFA (Ayam Petelur)</th>
+                            <th>HPP Dasar (Rp)</th>
+                            <th>Buffer Ops (%)</th>
+                            <th>Buffer TEFA (%)</th>
+                            <th>Harga Rekomendasi</th>
+                            <th>Harga Jual Aktif (Rp)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceTableBody">
+                        <tr>
+                            <td>
+                                <b>Telur Ayam Ras Fresh Grade A</b><br>
+                                <span style="font-size:0.75rem; color:var(--text-sub);">Satuan: per Kg</span>
+                            </td>
+                            <td>13.500</td>
+                            <td>15%</td>
+                            <td>20%</td>
+                            <td><span style="color:var(--accent-gold); font-weight:700;">Rp 18.225</span></td>
+                            <td>
+                                <input type="number" class="price-input" value="18500" id="price-1">
+                            </td>
+                            <td>
+                                <button onclick="updateHarga('Telur Ayam Ras Fresh', 'price-1')" style="background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.4); color:var(--accent-green); padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer;">Simpan</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Ayam Afkir Layer (Karkas / Hidup)</b><br>
+                                <span style="font-size:0.75rem; color:var(--text-sub);">Satuan: per Ekor</span>
+                            </td>
+                            <td>35.000</td>
+                            <td>10%</td>
+                            <td>15%</td>
+                            <td><span style="color:var(--accent-gold); font-weight:700;">Rp 43.750</span></td>
+                            <td>
+                                <input type="number" class="price-input" value="44000" id="price-2">
+                            </td>
+                            <td>
+                                <button onclick="updateHarga('Ayam Afkir Layer', 'price-2')" style="background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.4); color:var(--accent-green); padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer;">Simpan</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Pupuk Organik Kotoran Ayam (Fermentasi)</b><br>
+                                <span style="font-size:0.75rem; color:var(--text-sub);">Satuan: Karung 25kg</span>
+                            </td>
+                            <td>12.000</td>
+                            <td>10%</td>
+                            <td>15%</td>
+                            <td><span style="color:var(--accent-gold); font-weight:700;">Rp 15.000</span></td>
+                            <td>
+                                <input type="number" class="price-input" value="15000" id="price-3">
+                            </td>
+                            <td>
+                                <button onclick="updateHarga('Pupuk Organik Kotoran Ayam', 'price-3')" style="background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.4); color:var(--accent-green); padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer;">Simpan</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 2: WIDGET BERITA PASAR & UNGGAS REAL-TIME -->
+        <div class="glass-card">
+            <div class="section-title">
+                BERITA PASAR UNGGAS & INFORMASI PETERNAKAN FAKTUAL (REAL-TIME)
+            </div>
+
+            <div class="news-grid">
+                
+                <!-- News Card 1 -->
+                <div class="news-card">
+                    <div>
+                        <span class="news-badge badge-kementan">KEMENTAN RI</span>
+                        <div class="news-title">Upaya Pemerintah Menjaga Stabilitas Harga Jagung & Pakan Ayam Petelur</div>
+                        <div class="news-snippet">
+                            Kementerian Pertanian memperkuat koordinasi distribusi jagung pakan untuk memastikan ketersediaan pakan peternak ayam ras dengan harga terjangkau.
+                        </div>
+                    </div>
+                    <div class="news-meta">
+                        <span>Sumber: Kementan</span>
+                        <a href="https://www.pertanian.go.id" target="_blank" rel="noopener noreferrer" class="news-link">
+                            Baca Berita
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="news-card">
+                    <div>
+                        <span class="news-badge badge-bps">BADAN PUSAT STATISTIK</span>
+                        <div class="news-title">Perkembangan Indeks Harga Konsumen & Komoditas Telur Ayam Ras</div>
+                        <div class="news-snippet">
+                            BPS mencatat perkembangan harga komoditas telur ayam ras di tingkat peternak produsen serta tingkat konsumsi masyarakat Jawa Timur.
+                        </div>
+                    </div>
+                    <div class="news-meta">
+                        <span>Sumber: BPS RI</span>
+                        <a href="https://www.bps.go.id" target="_blank" rel="noopener noreferrer" class="news-link">
+                            Baca Berita
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="news-card">
+                    <div>
+                        <span class="news-badge badge-antara">ANTARA NEWS</span>
+                        <div class="news-title">Penguatan Program Teaching Factory (TEFA) SMK Pertanian Berbasis Industri</div>
+                        <div class="news-snippet">
+                            Penguatan tata kelola Teaching Factory di SMK Pertanian mendorong produktivitas unit peternakan layer dan kesiapan siswa dalam mengelola bisnis komoditas unggas.
+                        </div>
+                    </div>
+                    <div class="news-meta">
+                        <span>Sumber: Antara News</span>
+                        <a href="https://www.antaranews.com" target="_blank" rel="noopener noreferrer" class="news-link">
+                            Baca Berita
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 Agribisnis Ternak Ruminansia & Unggas • SMKN 1 Wonosari</p>
+        </footer>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span id="toastText">Harga Produk Berhasil Diperbarui!</span>
+    </div>
+
+    <script>
+        function updateHarga(namaProduk, inputId) {
+            const val = document.getElementById(inputId).value;
+            const formatted = parseInt(val).toLocaleString('id-ID');
+            showToast(`Harga ${namaProduk} berhasil diubah menjadi Rp ${formatted}`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toastText');
+            toastText.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
