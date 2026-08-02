@@ -472,7 +472,7 @@
 
         <div class="menu-grid">
             <!-- Card 1: Kasir Direct Selling -->
-            <div class="glass-card icon-menu-card" onclick="openMenu('Kasir Direct Selling')">
+            <div class="glass-card icon-menu-card" onclick="openMenu('https://dahsh-ja.github.io/agribisnis-ternak-ruminansia/direct%20selling.html', 'Kasir Direct Selling')">
                 <span class="menu-title">Kasir Direct Selling</span>
                 <svg class="menu-svg-icon" viewBox="0 0 24 24">
                     <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
@@ -481,7 +481,7 @@
             </div>
 
             <!-- Card 2: Pre-Order & Langganan -->
-            <div class="glass-card icon-menu-card" onclick="openMenu('Pre-Order & Langganan')">
+            <div class="glass-card icon-menu-card" onclick="openMenu('https://dahsh-ja.github.io/agribisnis-ternak-ruminansia/Pre-order%20dan%20langganan.html', 'Pre-Order & Langganan')">
                 <span class="menu-title">Pre-Order & Langganan</span>
                 <svg class="menu-svg-icon" viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -492,7 +492,7 @@
             </div>
 
             <!-- Card 3: Traceability & HDP -->
-            <div class="glass-card icon-menu-card" onclick="openMenu('Traceability & HDP')">
+            <div class="glass-card icon-menu-card" onclick="openMenu('https://dahsh-ja.github.io/agribisnis-ternak-ruminansia/Traceability%20dan%20HDP.html', 'Traceability & HDP')">
                 <span class="menu-title">Traceability & HDP</span>
                 <svg class="menu-svg-icon" viewBox="0 0 24 24">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
@@ -500,7 +500,7 @@
             </div>
 
             <!-- Card 4: Double Margin Buffer -->
-            <div class="glass-card icon-menu-card" onclick="openMenu('Double Margin Buffer')">
+            <div class="glass-card icon-menu-card" onclick="openMenu('https://dahsh-ja.github.io/agribisnis-ternak-ruminansia/Double%20Margin%20Buffer.html', 'Double Margin Buffer')">
                 <span class="menu-title">Double Margin Buffer</span>
                 <svg class="menu-svg-icon" viewBox="0 0 24 24">
                     <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -510,7 +510,7 @@
             </div>
 
             <!-- Card 5: Laporan Keuangan -->
-            <div class="glass-card icon-menu-card" onclick="openMenu('Laporan Keuangan')">
+            <div class="glass-card icon-menu-card" onclick="openMenu('https://dahsh-ja.github.io/agribisnis-ternak-ruminansia/Laporan%20Keuangan.html', 'Laporan Keuangan')">
                 <span class="menu-title">Laporan Keuangan</span>
                 <svg class="menu-svg-icon" viewBox="0 0 24 24">
                     <line x1="18" y1="20" x2="18" y2="10"/>
@@ -520,7 +520,7 @@
             </div>
 
             <!-- Card 6: Pengaturan Harga -->
-            <div class="glass-card icon-menu-card" onclick="openMenu('Pengaturan Harga')">
+            <div class="glass-card icon-menu-card" onclick="openMenu('https://dahsh-ja.github.io/agribisnis-ternak-ruminansia/Pengaturan.html', 'Pengaturan Harga')">
                 <span class="menu-title">Pengaturan Harga</span>
                 <svg class="menu-svg-icon" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="3"/>
@@ -538,19 +538,22 @@
     <!-- Notification Toast -->
     <div class="toast" id="toast">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <span id="toastText">Modul Berhasil Dibuka!</span>
+        <span id="toastText">Membuka Modul...</span>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        function openMenu(menuName) {
+        function openMenu(url, menuName) {
             const toast = document.getElementById('toast');
             const toastText = document.getElementById('toastText');
+            
             toastText.innerText = 'Membuka Modul: ' + menuName;
             toast.classList.add('show');
+            
+            // Jeda 500ms agar toast sempat muncul sebelum berpindah halaman
             setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2500);
+                window.location.href = url;
+            }, 500);
         }
     </script>
 </body>
